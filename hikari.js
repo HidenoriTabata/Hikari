@@ -31,7 +31,6 @@ const yargs = require('yargs')
 
 
 let graphql = require("./graphQL.js")
-const { string } = require('yargs')
 
 
 function printResults(response) {
