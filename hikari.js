@@ -32,16 +32,6 @@ const yargs = require('yargs')
 
 let graphql = require("./graphQL.js")
 
-function checkGraphQL(graphql) {
-  console.log(graphql.anime)
-  if (graphql.data == null) {
-    console.log("ERROR: " + graphql.errors[0].message)
-    process.exit(1)
-  }
-
-  return graphql
-}
-
 
 function printResults(response) {
   console.log(response.data)
@@ -138,11 +128,7 @@ else if (yargs._.includes("repeating")) {
   graphql.variables.status = "REPEATING"
 }
 
-if (yargs._.includes("completed")) {
-  graphql.variables.status = "COMPLETED"
-}
-
-
+// Option defaults to anime
 if (yargs._.includes("manga")) {
   graphql.variables.type = "MANGA"
 }
