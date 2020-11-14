@@ -31,38 +31,37 @@ const yargs = require('yargs')
 
 
 let graphql = require("./graphQL.js")
+const { string } = require('yargs')
 
 
 function printResults(response) {
-  console.log(response.data)
   if (graphql.variables.search != null) {
     if (graphql.variables.type == "ANIME") {
       animeList = response.data.anime.results
       animeList.forEach(anime => {
-        console.log(anime.title.userPreferred)
+        console.log(anime.title.userPreferred.green)
       })
     }
     else {
       mangaList = response.data.manga.results
       mangaList.forEach(manga => {
-        console.log(manga.title.userPreferred)
+        console.log(manga.title.userPreferred.green)
       })
     }
   }
   else {
-    var itemNumber = 0
+    var showNumber = 0
     animeList = response.data.MediaListCollection.lists[0].entries
     animeList.forEach(anime => {
-      var AnimeTitle = anime.media.title.userPreferred
-      var animeScore = anime.score
-      var EpisodesWatched = String(anime.progress)
-      var NumberOfEpisodes = String(anime.media.episodes)
-      itemNumber++
-      if (NumberOfEpisodes == "null") {
-        NumberOfEpisodes = '?'
+      var animeTitle = anime.media.title.userPreferred
+      var episodesWatched = String(anime.progress)
+      var numberOfEpisodes = String(anime.media.episodes)
+      showNumber++
+      if (numberOfEpisodes == "null") {
+        numberOfEpisodes = '?'
       }
-      console.log(itemNumber + ": " + AnimeTitle.green + " (" + animeScore + "/10)".green)
-      console.log("   You have watched " + EpisodesWatched.white + " out of " + NumberOfEpisodes.white + " episodes")
+      console.log("%s: " + "%s".green + " (%s/10)".yellow, showNumber, animeTitle, anime.score)
+      console.log("   You have watched %s out of %s episodes", episodesWatched, numberOfEpisodes)
     })
   }
 }
@@ -128,7 +127,7 @@ else if (yargs._.includes("repeating")) {
   graphql.variables.status = "REPEATING"
 }
 
-// Option defaults to anime
+// Search defaults to anime unless specified
 if (yargs._.includes("manga")) {
   graphql.variables.type = "MANGA"
 }
