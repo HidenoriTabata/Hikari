@@ -8,45 +8,92 @@ module.exports.variables = {
   }
   
 module.exports.query = `
-  query ($userId: Int, $userName: String, $type: MediaType, $status: MediaListStatus) {
-    MediaListCollection(userId: $userId, userName: $userName, type: $type, status_in: [$status]) {
-      lists {
-        name
-        entries {
-          ...mediaListEntry
-        }
+query ($userName: String, $type: MediaType, $status: MediaListStatus) {
+  MediaListCollection(userName: $userName, type: $type, status_in: [$status]) {
+    lists {
+      name
+      isCustomList
+      isCompletedList: isSplitCompletedList
+      entries {
+        ...mediaListEntry
+      }
+    }
+    user {
+      id
+      name
+      avatar {
+        large
+      }
+      mediaListOptions {
+        scoreFormat
+        rowOrder
       }
     }
   }
-  
-  fragment mediaListEntry on MediaList {
-    id
-    mediaId
+}
+
+fragment mediaListEntry on MediaList {
+  score
+  progress
+  progressVolumes
+  media {
+    title {
+      userPreferred
+    }
+    type
+    format
     status
-    score
-    progress
-    progressVolumes
-    repeat
-    priority
-    hiddenFromStatusLists
-    advancedScores
-    media {
-      title {
-        userPreferred
-      }
-      type
-      format
-      status
-      episodes
-      volumes
-      chapters
-      averageScore
-      popularity
-      isAdult
-      genres
-    }
+    episodes
+    volumes
+    chapters
   }
-  `
+}
+`
+// `
+//   query ($userId: Int, $userName: String, $type: MediaType, $status: MediaListStatus) {
+//     MediaListCollection(userId: $userId, userName: $userName, type: $type, status_in: [$status]) {
+//       lists {
+//         name
+//         entries {
+//           ...mediaListEntry
+//         }
+//       }
+//     }
+//   }
+  
+//   fragment mediaListEntry on MediaList {
+//     id
+//     mediaId
+//     status
+//     score
+    // progress
+    // progressVolumes
+    // repeat
+    // priority
+    // hiddenFromStatusLists
+    // advancedScores
+  //   media {
+  //     title {
+  //       userPreferred
+  //     }
+  //     mediaListEntry {
+  //       id
+  //       status
+  //       score
+  //     }
+  //     type
+  //     format
+  //     status
+  //     episodes
+  //     volumes
+  //     chapters
+  //     averageScore
+  //     popularity
+  //     isAdult
+  //     genres
+  //   }
+  // }
+  // `
 
 module.exports.searchQuery = `
   query ($search: String, $isAdult: Boolean) {
